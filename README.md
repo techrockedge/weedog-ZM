@@ -124,6 +124,7 @@ to access the zoneminder console.
 Subsitute one of these plug's for the firstrib00-NoX.plug and build a GUI desktop.
 The window manager is JWM and rox --pinboard with xlunch menus.
 
+ - firefox
  - geany
  - vlc
  - viewnior
@@ -131,6 +132,8 @@ The window manager is JWM and rox --pinboard with xlunch menus.
  - mtpaint
  - leafpad
  - lxterminal
+ - chrony
+ - xterm, uxterm
 
 are included and with xbps-install and the Void Linux repos it is easy to expand and build on
 the system 
@@ -147,5 +150,14 @@ Feel free to change any settings or parameter or modify the scripts.
 <https://www.hiawatha-webserver.org/>
 
 <https://zoneminder.com/>
+
+<https://zoneminder.readthedocs.io/en/latest/>
+
+<https://wiki.zoneminder.com/Helpful_user_contributed_resources>
+
+<https://forums.zoneminder.com/>
+
+
+---
 
 
