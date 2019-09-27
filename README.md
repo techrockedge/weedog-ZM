@@ -92,6 +92,7 @@ in the shell run
 
 Timezone in /etc/php.ini and the system clock MUST match. 
 
+##server start/stop
   to start the servers
 
      hiawatha
@@ -108,3 +109,43 @@ if there is difficulty starting mysqld after a reboot check and make sure the
 directory **/run/mysqld** exists. If it does not exist create it and then start 
 
       mysqld --user=root &
+
+##remote machine
+
+In the shell use `ifconfig -a` to find the machine's subnet IP
+
+on a second computer open a browser and use that IP  http://your-subnet-ip/zm 
+to access the zoneminder console.
+
+##weedog-ZM with graphical desktop
+
+### firstrib00-32.plug and firstrib00-64.plug
+
+Subsitute one of these plug's for the firstrib00-NoX.plug and build a GUI desktop.
+The window manager is JWM and rox --pinboard with xlunch menus.
+
+ - geany
+ - vlc
+ - viewnior
+ - guvcview
+ - mtpaint
+ - leafpad
+ - lxterminal
+
+are included and with xbps-install and the Void Linux repos it is easy to expand and build on
+the system 
+
+login after boot and use `startx` to launch the desktop.
+
+Build ZoneMinder the same way and can be done from the shell command line after login 
+or from from a terminal once the X server is up and running.
+
+Feel free to change any settings or parameter or modify the scripts.
+
+<http://www.murga-linux.com/puppy/viewtopic.php?p=1035524#1035524>
+
+<https://www.hiawatha-webserver.org/>
+
+<https://zoneminder.com/>
+
+
