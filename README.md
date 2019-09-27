@@ -145,7 +145,7 @@ or from from a terminal once the X server is up and running.
 
 Feel free to change any settings or parameter or modify the scripts.
 
-<http://www.murga-linux.com/puppy/viewtopic.php?p=1035524#1035524>
+**<http://www.murga-linux.com/puppy/viewtopic.php?p=1035524#1035524>**
 
 <https://www.hiawatha-webserver.org/>
 
