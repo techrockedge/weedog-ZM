@@ -76,7 +76,7 @@ cmake CMAKE_INSTALL_PREFIX=/usr -DCMAKE_SKIP_RPATH=ON -DCMAKE_VERBOSE_MAKEFILE=O
 make 
 make install
 
-/root/Build/zoneminder/zmlinkcontent.sh
+/root/Build/zoneminder/zmlinkcontent.sh -z /etc/zm/zm.conf
 mkdir /var/cache/zoneminder/cache
 chown -R www-data:www-data /var/cache/zoneminder
 ln -s /var/cache/zoneminder/cache /usr/share/zoneminder/www/cache
