@@ -4,4 +4,4 @@
 ARCH="$1"
 PLUG="$2"
 ./build_firstrib_rootfs_103.sh void rolling $ARCH $PLUG
-./build_weedog_initramfs05_s203.sh void
+./build_weedog_initramfs05_s207.sh void
