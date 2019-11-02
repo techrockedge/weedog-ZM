@@ -1,5 +1,5 @@
-# WeeDog Void (tested up to and through firstrib05-s205) outfitted with a basic desktop and the Void Linux kernel
-# login is user=root passwd=root
+# WeeDog Void (tested up to and through firstrib05-s207) outfitted with a basic desktop and the Void Linux kernel
+# this version sets up automatic login. Main creditials are user=root, passwd=root
 # startx will launch the desktop and time is set to UTC
 # all the parameters can changed as desired.
 #

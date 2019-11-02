@@ -1,4 +1,4 @@
-# WeeDog Void (tested up to and through firstrib05-s205) outfitted with a basic desktop and the Void Linux kernel
+# WeeDog Void (tested up to and through firstrib05-s207) outfitted with a basic desktop and the Void Linux kernel
 # login is user=root passwd=root
 # startx will launch the desktop and time is set to UTC
 # all the parameters can changed as desired.
@@ -122,8 +122,8 @@ cat <<'EOF' >> /root/.jwmrc
 <!-- The root menu. -->
   <RootMenu onroot="12" height="24">
     <Program icon="/usr/share/icons/Adwaita/48x48/legacy/utilities-terminal.png" label="Terminal">xterm -bg black -fg green</Program>
+    <Program icon="/usr/share/pixmaps/rox.png" label="ROX">rox</Program>
       <Menu icon="/usr/share/icons/Adwaita/48x48/legacy/system-run.png" label="Applications">
-         <Program icon="/usr/share/pixmaps/rox.png" label="ROX">rox</Program>
          <Program icon="/usr/share/icons/hicolor/16x16/apps/vlc.png" label="VLC">vlc</Program>
          <Program icon="/usr/share/icons/hicolor/128x128/apps/lxterminal.png" label="lxterminal">lxterminal</Program>
          <Program icon="/usr/share/pixmaps/mtpaint.png" label="mtpaint">mtpaint</Program>
