@@ -122,8 +122,8 @@ cat <<'EOF' >> /root/.jwmrc
 <!-- The root menu. -->
   <RootMenu onroot="12" height="24">
     <Program icon="/usr/share/icons/Adwaita/48x48/legacy/utilities-terminal.png" label="Terminal">xterm -bg black -fg green</Program>
+    <Program icon="/usr/share/pixmaps/rox.png" label="ROX">rox</Program> 
       <Menu icon="/usr/share/icons/Adwaita/48x48/legacy/system-run.png" label="Applications">
-         <Program icon="/usr/share/pixmaps/rox.png" label="ROX">rox</Program>
          <Program icon="/usr/share/icons/hicolor/16x16/apps/vlc.png" label="VLC">vlc</Program>
          <Program icon="/usr/share/icons/hicolor/128x128/apps/lxterminal.png" label="lxterminal">lxterminal</Program>
          <Program icon="/usr/share/pixmaps/mtpaint.png" label="mtpaint">mtpaint</Program>
@@ -389,5 +389,71 @@ tar xvfz backgrounds.tar.gz -C /usr/share/
 # remove pmcputemp, retrovol, xlunch, mm_viewme install files
 rm -r /root/Build
 
+# Set up automatic login as user = root
+# Create a new autologin service
+cp -R /etc/sv/agetty-tty1 /etc/sv/agetty-autologin-tty1
+rm /var/service/agetty-tty1login-tty1/conf
+rm /var/service/agetty-tty1
+ln -s /etc/sv/agetty-autologin-tty1 /var/service
+
+cat <<'EOF' >>  /etc/sv/agetty-autologin-tty1/conf
+if [ -x /sbin/agetty -o -x /bin/agetty ]; then
+	# util-linux specific settings
+	if [ "${tty}" = "tty1" ]; then
+		GETTY_ARGS="--autologin root --noclear"
+	fi
+fi
+
+BAUD_RATE=38400
+TERM_NAME=linux
+EOF
+
+# Replace profile for autologin
+rm /etc/profile
+
+cat <<'EOF' >> /etc/profile
+# /etc/profile
+
+# System wide environment and startup programs.
+
+appendpath () {
+    case ":$PATH:" in
+        *:"$1":*)
+            ;;
+        *)
+            PATH="${PATH:+$PATH:}$1"
+    esac
+}
+
+# Set our default path (/usr/sbin:/sbin:/bin included for non-Void chroots)
+appendpath '/usr/local/sbin'
+appendpath '/usr/local/bin'
+appendpath '/usr/bin'
+appendpath '/usr/sbin'
+appendpath '/sbin'
+appendpath '/bin'
+unset appendpath
+
+export PATH
+
+# Set default umask
+umask 022
+
+# autologin on tty1
+ if [ -z "$DISPLAY" ] && [ "$(fgconsole)" -eq 1 ]; then
+    exec startx
+ fi
+
+# Load profiles from /etc/profile.d
+if [ -d /etc/profile.d/ ]; then
+	for f in /etc/profile.d/*.sh; do
+		[ -r "$f" ] && . "$f"
+	done
+	unset f
+fi
+
+EOF
+
+####### Finished and echo report
 echo "desktop build process finished"
 
