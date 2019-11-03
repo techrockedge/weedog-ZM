@@ -397,7 +397,7 @@ cat <<'EOF' >>  /etc/sv/agetty-autologin-tty1/conf
 if [ -x /sbin/agetty -o -x /bin/agetty ]; then
 	# util-linux specific settings
 	if [ "${tty}" = "tty1" ]; then
-		GETTY_ARGS="--autologin root --noclear"
+		GETTY_ARGS=" --autologin root --noclear"
 	fi
 fi
 
