@@ -21,7 +21,6 @@ mysqld --user=root &
 
 xbps-install -y libressl libressl-devel 
 xbps-install -y php-cgi php-apcu php-gd php-mysql xdebug curl
-
 xbps-install -y libjpeg-turbo-devel libjpeg-turbo
 xbps-install -y vlc-devel
 xbps-install -y libmp4v2 libmp4v2-devel
@@ -51,6 +50,7 @@ cpanm Data::UUID
 cpanm Class::Std::Fast
 cpanm SOAP::WSDL::Transport::HTTP
 cpanm IO::Socket::Multicast
+cpanm LWP::Protocol::https
 
 # Make sure that NOBODY can access the server without a password
 mysql -e "UPDATE mysql.user SET Password = PASSWORD('admin') WHERE User = 'root'"

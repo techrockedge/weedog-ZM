@@ -444,9 +444,9 @@ export PATH
 umask 022
 
 # autologin on tty1
- if [ -z "$DISPLAY" ] && [ "$(fgconsole)" -eq 1 ]; then
-    exec startx
- fi
+if [ -z "$DISPLAY" ] && [ "$(fgconsole)" -eq 1 ]; then
+    startx
+fi
 
 # Load profiles from /etc/profile.d
 if [ -d /etc/profile.d/ ]; then
