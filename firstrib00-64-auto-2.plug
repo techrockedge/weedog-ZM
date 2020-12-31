@@ -3,6 +3,8 @@
 # startx will launch the desktop and time is set to UTC
 # all the parameters can changed as desired.
 #
+# updated 11/28/20
+
 xbps-install -y base-minimal file mc
 xbps-install -y ncurses-base linux linux-firmware-network wifi-firmware shadow
 pwconv # set up passwd system
@@ -123,35 +125,20 @@ cat <<'EOF' >> /root/.jwmrc
 	
 <!-- The root menu. -->
   <RootMenu onroot="12" height="24">
-    <Program icon="/usr/share/icons/Adwaita/48x48/legacy/utilities-terminal.png" label="Terminal">xterm -bg black -fg green</Program>
-    <Program icon="/usr/share/pixmaps/rox.png" label="ROX">rox</Program>
-      <Menu icon="/usr/share/icons/Adwaita/48x48/legacy/system-run.png" label="Applications">
-         <Program icon="/usr/share/icons/hicolor/16x16/apps/vlc.png" label="VLC">vlc</Program>
-         <Program icon="/usr/share/icons/hicolor/128x128/apps/lxterminal.png" label="lxterminal">lxterminal</Program>
-         <Program icon="/usr/share/pixmaps/mtpaint.png" label="mtpaint">mtpaint</Program>
-         <Program icon="/usr/share/icons/Adwaita/32x32/legacy/camera-web.png" label="guvcview">guvcview</Program>
-         <Program icon="/usr/share/icons/hicolor/32x32/apps/firefox.png" label="Firefox">firefox</Program>
-         <Program icon="/usr/share/icons/hicolor/32x32/apps/leafpad.png" label="leafpad">leafpad</Program>
-       </Menu>
-        <Menu icon="/usr/share/icons/Adwaita/48x48/legacy/applications-system.png" label="Utilities">
-            <Program icon="/usr/share/icons/Adwaita/256x256/legacy/preferences-desktop-font.png" label="Fonts">xfontsel</Program>
-            <Program icon="/usr/share/icons/Adwaita/256x256/legacy/preferences-desktop-remote-desktop.png" label="Window Properties">
-                xprop | xmessage -file -
-            </Program>
-            <Program icon="/usr/share/icons/Adwaita/256x256/legacy/preferences-desktop-display.png" label="Window Information">
-                xwininfo | xmessage -file -
-            </Program>
-        </Menu>
+        <Include>/root/.jwmrc-mjwm</Include>
+
         <Separator/>
         <Program icon="/usr/share/icons/Adwaita/256x256/legacy/system-lock-screen.png" label="Lock">
             xlock -mode blank
         </Program>
+
         <Separator/>
-        <Restart label="Restart" icon="/usr/share/icons/Adwaita/48x48/actions/view-refresh-symbolic.symbolic.png"/>
-        <Exit label="Exit" confirm="true" icon="/usr/share/icons/Adwaita/48x48/actions/application-exit-symbolic.symbolic.png"/>
-        <Program icon="/usr/share/icons/Adwaita/48x48/actions/system-shutdown-symbolic.symbolic.png" label="Shutdown">xlunch-logout</Program>
+        <Restart label="Restart" icon="/usr/share/icons/Adwaita/scalable/emblems/emblem-synchronizing-symbolic.svg"/>
+        <Exit label="Exit" confirm="true" icon="/usr/share/icons/Adwaita/scalable/actions/system-log-out-symbolic.svg"/>
+        <Program icon="/usr/share/icons/Adwaita/scalable/actions/system-shutdown-symbolic.svg" label="Shutdown">xlunch-logout</Program>
     </RootMenu>
- <!-- Options for program groups. -->
+
+<!-- Options for program groups. -->
     <Group>
         <Option>tiled</Option>
         <Option>aerosnap</Option>
@@ -181,12 +168,9 @@ cat <<'EOF' >> /root/.jwmrc
                                                            
     <Pager labeled="true"/>
         <TaskList maxwidth="256"/>
-                                                           
     <Dock/>
-                                                                 
         <Swallow name="xload" width="32">xload -nolabel -bg "#444444" -fg "#00FF00" -hl "#4C7CC1"</Swallow>
         <Clock format="%a %d %b %H:%M"><Button mask="123">exec:xclock</Button></Clock>
-                                                           
     </Tray>
                                                            
 <!-- Visual Styles -->
@@ -315,6 +299,7 @@ cat <<'EOF' >> /root/.jwmrc
     <StartupCommand>start_pmcputemp &</StartupCommand>
                                                            
 </JWM>
+
 EOF
 
 # install pmcputemp 0.63

@@ -66,7 +66,7 @@ mysql -e "FLUSH PRIVILEGES"
 # clone zoneminder-master and compile and build package
 
 echo "create Build directory clone zoneminder-master"
-mkdir /root/Build
+mkdir -p /root/Build
 cd /root/Build
 git clone https://github.com/ZoneMinder/zoneminder.git
 cd zoneminder
