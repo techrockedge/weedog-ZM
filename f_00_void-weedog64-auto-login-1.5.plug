@@ -1,4 +1,7 @@
-# WeeDog32-Void outfitted with a basic 32 bit desktop and a Void Linux i686 kernel
+# FirstRib Build Plugin: 
+# Contributed by: rockedge
+# License: MIT; Creation Date: 01JAN2021; Revision Date: 01JAN2021
+# WeeDog64-Void outfitted with a basic jwm + rox desktop and a Void Linux kernel
 # this version sets up automatic login. Main creditials are user=root, passwd=root
 # startx will launch the desktop and time is set to UTC
 # all the parameters can changed as desired.
@@ -17,13 +20,15 @@ xbps-install -y xorg jwm rox bash xterm lxterminal geany adwaita-icon-theme
 xbps-install -y mtpaint htop viewnior xarchiver guvcview ffmpeg alsa-utils
 xbps-install -y firefox squashfs-tools vlc gtkdialog chrony leafpad scrot
 xbps-install -y yad cpanminus menu-cache librsvg-utils
-xbps-install -y socklog-void ntfs-3g xdgmenumaker
+xbps-install -y socklog-void xdgmenumaker ntfs-3g
 
-# Set locale
+
+# Set locale to en_US.UTF-8 
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/default/libc-locales
 xbps-reconfigure -f glibc-locales
 
-# Make changes in /etc/X11/xinit/xinitrc to start jwm and rox -p default with startx
+# Make changes in /etc/X11/xinit/xinitrc to start jwm and rox -p default with startx if startx is included in /etc/rc.local
+# and auto starts the X server, jwm and rox before the login prompt.
 # Add /root/.xinitrc for the actual startx commands that will be used after logging in as "root"
 cp /etc/X11/xinit/xinitrc /root/.xinitrc
 sed -i '51,$d' /etc/X11/xinit/xinitrc
@@ -45,16 +50,16 @@ sed -i 's/geteuid/getppid/' /usr/bin/vlc
 
 # Construct rox pinboard default 
 # ***NOTE*** change /mnt/sda1 to match the partition WeeDog is installed on
-mkdir /root/.config
-mkdir /root/.config/rox.sourceforge.net
-mkdir /root/.config/rox.sourceforge.net/ROX-Filer
+#mkdir /root/.config
+#mkdir /root/.config/rox.sourceforge.net
+mkdir -p /root/.config/rox.sourceforge.net/ROX-Filer
 cd /root/.config/rox.sourceforge.net/ROX-Filer
 cat <<'EOF' >> pb_default
 <?xml version="1.0"?>
 <pinboard>
 <backdrop style="Stretched">/usr/share/backgrounds/DarkGray.svg</backdrop>
 <icon x="256" y="32" label="mm_vw">/usr/local/bin/mm_viewme</icon>
-<icon x="32" y="128" label="xterm">/usr/share/applications/xterm.desktop</icon>
+<icon x="32" y="128" label="xterm">/usr/local/bin/defaultterminal</icon>
 <icon x="32" y="224" label="firefox">/usr/share/applications/firefox.desktop</icon>
 <icon x="128" y="32" label="applications">/usr/share/applications</icon>
 <icon x="32" y="32" label="Home">/root</icon>
@@ -63,14 +68,14 @@ cat <<'EOF' >> pb_default
 </pinboard>
 EOF
 
-# Network script construction for eth0 and lo or call wiakwifi
+# Network script construction for eth0 and lo
 cd /usr/local/bin/
 touch net_connect
 echo '#!/bin/sh' >>net_connect
 echo '#ip link set eth0 up' >>net_connect
 echo '#ip link set lo up' >>net_connect
 echo '#udhcpc -i eth0' >>net_connect
-echo '#wiakwifi' >>net_connect
+echo 'wiakwifi' >>net_connect
 
 # Set Time script construction. will set to UTC
 # modify /etc/rc.conf to adjust timezone and hardware clock
@@ -84,12 +89,12 @@ echo '#!/bin/sh' >>start_sound
 echo 'modprobe snd_hda_intel' >>start_sound
 echo 'alsactl init' >>start_sound
 
-# start pmcputemp script construction
+# start_pmcputemp script construction
 touch start_pmcputemp
 echo '#!/bin/sh' >>start_pmcputemp
 echo 'exec pmcputemp' >>start_pmcputemp
 
-# start retrovol script construction
+# start_retrovol script construction
 touch start_retrovol
 echo '#!/bin/sh' >>start_retrovol
 echo 'exec retrovol' >>start_retrovol
@@ -108,18 +113,18 @@ chmod +x /usr/local/bin/start_pmcputemp
 chmod +x /usr/local/bin/start_retrovol
 chmod +x /usr/local/bin/start_logging
 
-# Set system to run our connection and audio start scripts on bootup
+# Set system to run connection and audio start scripts on bootup
 cd /etc
-echo "# /usr/local/bin/net_connect" >>rc.local
-echo "# /usr/local/bin/set_time" >>rc.local
+echo "#/usr/local/bin/net_connect" >>rc.local
+echo "#/usr/local/bin/set_time" >>rc.local
 echo "/usr/local/bin/start_sound" >>rc.local
 echo "/usr/local/bin/start_logging" >>rc.local
 
 #ln -s /etc/sv/alsa /var/service/alsa
-# enable socklog logging
-#ln -s /etc/sv/socklog-unix /var/service/
-#ln -s /etc/sv/nanoklogd /var/service/
 
+# enable socklog logging
+ln -s /etc/sv/socklog-unix /var/service/
+ln -s /etc/sv/nanoklogd /var/service/
 
 # Set Bash as shell
 xbps-alternatives --set bash
@@ -311,32 +316,27 @@ cat <<'EOF' >> /root/.jwmrc
     <StartupCommand>start_pmcputemp &</StartupCommand>
                                                            
 </JWM>
-
 EOF
 
-# install pmcputemp 0.63-i686
+# install pmcputemp 0.63
 mkdir /root/Build
 cd /root/Build
-wget http://rockedge.org/kernels/data/firstrib/pmcputemp-0.63-i686.tar.gz
-tar xvfz pmcputemp-0.63-i686.tar.gz
-cd pmcputemp-0.63-i686
+wget http://rockedge.org/kernels/data/firstrib/pmcputemp-0.63a.tar.gz
+tar xvfz pmcputemp-0.63a.tar.gz
+cd pmcputemp-0.63a
+cp -r $PWD/root/.config/pmcputemp /root/.config/pmcputemp
+cp -r $PWD/root/.config/autostart/pmcputemp.desktop /usr/share/applications/pmcputemp.desktop
 cp -r $PWD/usr/bin/pmcputemp /usr/bin/pmcputemp
 cp -r $PWD/usr/bin/pmcputemp.sh /usr/bin/pmcputemp.sh
-cp -r $PWD/usr/share/doc/nls /usr/share/doc/nls
-cp -r $PWD/usr/share/applications/pmcputemp.desktop /usr/share/applications/pmcputemp.desktop
-
-# install retrovol 0.14.3.2-X
+ 
+# install retrovol 0.10
 cd /root/Build
-wget http://rockedge.org/kernels/data/firstrib/retrovol-0.14.3.2-X.tar.gz
-tar xvfz retrovol-0.14.3.2-X.tar.gz
-cd retrovol-0.14.3.2-X
+wget http://rockedge.org/kernels/data/firstrib/retrovol-0.10-x86_64.tar.gz
+tar xvfz retrovol-0.10-x86_64.tar.gz
+cd retrovol-0.10-x86_64
 cp -r $PWD/usr/bin/retrovol /usr/bin/retrovol
-cp -r $PWD/usr/bin/retrocon /usr/bin/retrocon
-cp -r $PWD/usr/bin/Multiple-Sound-Card-Wizard /usr/bin/Multiple-Sound-Card-Wizard
-cp -r $PWD/usr/share/applications/retrovol.desktop /usr/share/applications/retrovol.desktop
-cp -r $PWD/usr/share/icons/hicolor/16x16/devices /usr/share/icons/hicolor/16x16/
+cp -r $PWD/usr/share/applications/Retrovol.desktop /usr/share/applications/Retrovol.desktop
 cp -r $PWD/usr/share/retrovol /usr/share/retrovol
-cp -r $PWD/usr/share/icons/hicolor/scalable/apps/retrovol.svg /usr/share/icons/hicolor/scalable/apps
 
 # install mm_viewme which is in the pb_default 
 cd /root/Build
@@ -346,9 +346,9 @@ cp -r $PWD/mm_viewme /usr/local/bin/mm_viewme
 
 # install xlunch
 cd /root/Build
-wget http://rockedge.org/kernels/data/firstrib/xlunch_4.1.1-1_i386.tar.gz
-tar xvfz xlunch_4.1.1-1_i386.tar.gz
-cd xlunch_4.1.1-1_i386
+wget http://rockedge.org/kernels/data/firstrib/xlunch_4.1.1-1_amd64.tar.gz
+tar xvfz xlunch_4.1.1-1_amd64.tar.gz
+cd xlunch_4.1.1-1_amd64
 cp -r $PWD/etc/xdg/menus /etc/xdg/menus
 cp -r $PWD/etc/xlunch /etc/xlunch
 cp -r $PWD/usr/local/bin/xlunch /usr/local/bin/xlunch
@@ -383,17 +383,11 @@ cd /root/Build
 wget http://rockedge.org/kernels/data/firstrib/backgrounds.tar.gz
 tar xvfz backgrounds.tar.gz -C /usr/share/
 
-# install /usr/local/bin scripts
-cd /root/Build
-wget http://rockedge.org/kernels/data/firstrib/wdl32_start_scripts.tar.gz
-tar xvfz wdl32_start_scripts.tar.gz -C /usr/local/bin
-
 # remove pmcputemp, retrovol, xlunch, mm_viewme install files
 rm -r /root/Build
 
 # Create some directories
 mkdir -p /root/my-applications/bin
-mkdir -p /root/my-documents/screenshots
 
 # Set up automatic login as user = root
 # Create a new autologin service
@@ -409,7 +403,7 @@ cat <<'EOF' >>  /etc/sv/agetty-autologin-tty1/conf
 if [ -x /sbin/agetty -o -x /bin/agetty ]; then
 	# util-linux specific settings
 	if [ "${tty}" = "tty1" ]; then
-		GETTY_ARGS="--autologin root --noclear"
+		GETTY_ARGS=" --autologin root --noclear"
 	fi
 fi
 
@@ -422,6 +416,7 @@ rm /etc/profile
 
 cat <<'EOF' >> /etc/profile
 # /etc/profile
+
 # System wide environment and startup programs.
 
 appendpath () {

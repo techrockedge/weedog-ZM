@@ -1,4 +1,7 @@
-# WeeDog32-Void outfitted with a basic 32 bit desktop and a Void Linux i686 kernel
+# FirstRib Build Plugin: 
+# Contributed by: rockedge
+# License: MIT; Creation Date: 01JAN2021; Revision Date: 01JAN2021
+# WeeDog32-Void outfitted with a basic desktop and a Void Linux kernel
 # this version sets up automatic login. Main creditials are user=root, passwd=root
 # startx will launch the desktop and time is set to UTC
 # all the parameters can changed as desired.
@@ -17,7 +20,7 @@ xbps-install -y xorg jwm rox bash xterm lxterminal geany adwaita-icon-theme
 xbps-install -y mtpaint htop viewnior xarchiver guvcview ffmpeg alsa-utils
 xbps-install -y firefox squashfs-tools vlc gtkdialog chrony leafpad scrot
 xbps-install -y yad cpanminus menu-cache librsvg-utils
-xbps-install -y socklog-void ntfs-3g xdgmenumaker
+xbps-install -y socklog-void ntfs-3g
 
 # Set locale
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/default/libc-locales
@@ -59,7 +62,6 @@ cat <<'EOF' >> pb_default
 <icon x="128" y="32" label="applications">/usr/share/applications</icon>
 <icon x="32" y="32" label="Home">/root</icon>
 <icon x="32" y="320" label="geany">/usr/share/applications/geany.desktop</icon>
-<icon x="32" y="416" label="mtpaint">/usr/share/applications/mtpaint.desktop</icon>
 </pinboard>
 EOF
 
@@ -70,7 +72,7 @@ echo '#!/bin/sh' >>net_connect
 echo '#ip link set eth0 up' >>net_connect
 echo '#ip link set lo up' >>net_connect
 echo '#udhcpc -i eth0' >>net_connect
-echo '#wiakwifi' >>net_connect
+echo 'wiakwifi' >>net_connect
 
 # Set Time script construction. will set to UTC
 # modify /etc/rc.conf to adjust timezone and hardware clock
@@ -94,31 +96,24 @@ touch start_retrovol
 echo '#!/bin/sh' >>start_retrovol
 echo 'exec retrovol' >>start_retrovol
 
-# start_logging script construction
-touch start_logging
-echo '# enable socklog logging' >>start_logging
-echo 'ln -s /etc/sv/socklog-unix /var/service/' >>start_logging
-echo 'ln -s /etc/sv/nanoklogd /var/service/' >>start_logging
-
 # make both net_connect and start_sound executable
 chmod +x /usr/local/bin/start_sound
 chmod +x /usr/local/bin/net_connect
 chmod +x /usr/local/bin/set_time
 chmod +x /usr/local/bin/start_pmcputemp
 chmod +x /usr/local/bin/start_retrovol
-chmod +x /usr/local/bin/start_logging
 
 # Set system to run our connection and audio start scripts on bootup
 cd /etc
 echo "# /usr/local/bin/net_connect" >>rc.local
 echo "# /usr/local/bin/set_time" >>rc.local
 echo "/usr/local/bin/start_sound" >>rc.local
-echo "/usr/local/bin/start_logging" >>rc.local
 
 #ln -s /etc/sv/alsa /var/service/alsa
+
 # enable socklog logging
-#ln -s /etc/sv/socklog-unix /var/service/
-#ln -s /etc/sv/nanoklogd /var/service/
+ln -s /etc/sv/socklog-unix /var/service/
+ln -s /etc/sv/nanoklogd /var/service/
 
 
 # Set Bash as shell
@@ -351,6 +346,7 @@ tar xvfz xlunch_4.1.1-1_i386.tar.gz
 cd xlunch_4.1.1-1_i386
 cp -r $PWD/etc/xdg/menus /etc/xdg/menus
 cp -r $PWD/etc/xlunch /etc/xlunch
+cp -r $PWD/usr/bin/genentries /usr/bin/genentries
 cp -r $PWD/usr/local/bin/xlunch /usr/local/bin/xlunch
 cp -r $PWD/usr/local/bin/xlunch-menu /usr/local/bin/xlunch-menu
 cp -r $PWD/usr/local/bin/xlunch-menu-update  /usr/local/bin/xlunch-menu-update
@@ -382,11 +378,6 @@ EOF
 cd /root/Build
 wget http://rockedge.org/kernels/data/firstrib/backgrounds.tar.gz
 tar xvfz backgrounds.tar.gz -C /usr/share/
-
-# install /usr/local/bin scripts
-cd /root/Build
-wget http://rockedge.org/kernels/data/firstrib/wdl32_start_scripts.tar.gz
-tar xvfz wdl32_start_scripts.tar.gz -C /usr/local/bin
 
 # remove pmcputemp, retrovol, xlunch, mm_viewme install files
 rm -r /root/Build
